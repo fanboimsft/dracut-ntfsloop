@@ -30,10 +30,8 @@ mount_ntfsloop() {
     if ! ismounted "$dev"; then
         info "ntfsloop: Mounting $dev onto /run/initramfs/ntfsloop/$uuid/ntfs"
 
-        # mount using ntfs-3g
-        # the @ sign is so that systemd doesn't attempt to kill the ntfs-3g process
-        ( exec -a @ntfs-3g ntfs-3g "$dev" "/run/initramfs/ntfsloop/$uuid/ntfs" ) | (while read l; do warn $l; done)
-
+        # mount using ntfs3 kernel driver
+        mount -t ntfs3 "$dev" "/run/initramfs/ntfsloop/$uuid/ntfs" | (while read l; do warn $l; done)
         # create a symlink for the device path - this symlink will survive and
         # be there for the shutdown hook, the mount point won't
         ln -s "$dev" "/run/initramfs/ntfsloop/$uuid/device"
