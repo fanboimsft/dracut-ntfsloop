@@ -1,4 +1,4 @@
-x#!/bin/bash
+#!/bin/bash
 
 # Copyright © 2016-2019 Jonas Kümmerlin <jonas@kuemmerlin.eu>
 #
