@@ -37,3 +37,42 @@ Example config file:
 ## Performance
 
 Decent with the new ntfs3 kernel driver
+
+dracut-cifsloop: Mount image from samba share
+==============================================
+
+This dracut modules allows you to use a root system located inside
+a disk image on a samba share
+
+## Requirements
+
+* dracut
+* fuse, mount.cifs, kpartx, losetup
+* kernel compiled with `IP: kernel level autoconfiguration and IP: DHCP support`
+  (someone more skilled can probably get systemd-networkd working in the initramfs instead)
+
+The disk image should contain a full partition table.
+From any linux distro: 
+`dd if=/dev/zero of=diskimage.img bs=1M count=10000`
+`cfdisk diskimage.img`
+`mkfs.ext4 diskimage.img`
+`mount diskimage.img /mnt`
+Then install any distro on there (chroot tarball is the easiest)
+
+
+## Installation
+
+* copy the `90cifsloop` directory to `/usr/lib/dracut/modules.d`
+* regenerate your initrd using `dracut -a "cifsloop" -f /boot/yourinitramfs.img `
+* add to your kernel command line: `rd.cifsloop=//SERVER-IP/SHARE:username=SHARE-USERNAME,password=SHARE-PASSOWRD:PATH/TO/IMAGE/ON/SHARE` 
+  and `ip=dhcp root=UUID=UUID-OF-IMAGE-PARTITION`
+* disable systemd-networkd `systemctl disable systemd-networkd` on the guest to avoid issues with other networking services 
+
+## Booting
+
+Easy boot with systemd-boot via EFI
+Example config file:
+
+`linux /vmlinuz`
+`initrd /initramfs.img`
+`options rd.cifsloop=//192.168.1.10/Share:username=user1,password=mypass:diskimage.img root=UUID=555555 ip=dhcp`
