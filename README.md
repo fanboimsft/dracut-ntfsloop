@@ -49,7 +49,6 @@ a disk image on a samba share
 * dracut
 * fuse, mount.cifs, kpartx, losetup
 * kernel compiled with `IP: kernel level autoconfiguration and IP: DHCP support`
-  (someone more skilled can probably get systemd-networkd working in the initramfs instead)
 
 The disk image should contain a full partition table.
 From any linux distro: 
@@ -66,7 +65,7 @@ Then install any distro on there (chroot tarball is the easiest)
 * regenerate your initrd using `dracut -a "cifsloop" -f /boot/yourinitramfs.img `
 * add to your kernel command line: `rd.cifsloop=//SERVER-IP/SHARE:username=SHARE-USERNAME,password=SHARE-PASSOWRD:PATH/TO/IMAGE/ON/SHARE` 
   and `ip=dhcp root=UUID=UUID-OF-IMAGE-PARTITION`
-* disable systemd-networkd `systemctl disable systemd-networkd` on the guest to avoid issues with other networking services 
+* disable systemd-networkd `systemctl disable systemd-networkd` on the guest to avoid issues with other networking services
 
 ## Booting
 
